@@ -18,11 +18,14 @@ const userSchema = new Schema<IUser>(
     },
     role: {
       type: String,
+      required: true,
       enum: ["admin", "student", "faculty"],
     },
     status: {
       type: String,
+      required: true,
       enum: ["active", "inactive"],
+      default: "active",
     },
     isDeleted: {
       type: Boolean,
