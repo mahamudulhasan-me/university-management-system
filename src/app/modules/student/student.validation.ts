@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { z } from "zod";
 
 export const ZodNameValidationSchema = z.object({
@@ -102,6 +103,14 @@ const ZodLocalGuardianValidationSchema = z.object({
     .optional(),
 });
 
+// Define a custom Zod type for MongoDB ObjectId
+const objectIdSchema = z.custom((value) => {
+  if (isValidObjectId(value)) {
+    return value;
+  } else {
+    throw new Error("User ID must be a valid MongoDB ObjectId");
+  }
+});
 const ZodStudentValidationSchema = z.object({
   id: z
     .string({
@@ -109,12 +118,7 @@ const ZodStudentValidationSchema = z.object({
       invalid_type_error: "ID must be a string",
     })
     .min(1, { message: "ID is required" }),
-  userId: z
-    .string({
-      required_error: "User ID is required",
-      invalid_type_error: "User ID must be a string",
-    })
-    .min(1, { message: "User ID is required" }), // Assuming userId is a string. Adjust if necessary.
+  userId: objectIdSchema, // Assuming userId is a string. Adjust if necessary.
   name: ZodNameValidationSchema,
   gender: z.enum(["male", "female"], {
     required_error: "Gender is required",

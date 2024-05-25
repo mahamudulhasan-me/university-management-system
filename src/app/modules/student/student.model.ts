@@ -48,7 +48,7 @@ export const studentSchema = new Schema<IStudent>({
   name: { type: nameSchema, required: true },
   gender: { type: String, enum: ["male", "female"], required: true },
   dateOfBirth: { type: Date, required: true },
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   contactNumber: { type: String, required: true },
   permanentAddress: { type: addressSchema, required: true },
   presentAddress: { type: addressSchema, required: true },

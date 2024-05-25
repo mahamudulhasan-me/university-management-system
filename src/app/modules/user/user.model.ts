@@ -49,4 +49,10 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// set empty string after create user
+userSchema.post("save", async function (userInfo, next) {
+  userInfo.password = "";
+  next();
+});
+
 export const UserModel = model<IUser>("User", userSchema);

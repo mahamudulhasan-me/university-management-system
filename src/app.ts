@@ -1,6 +1,8 @@
 import cors from "cors";
-import express from "express";
-import { UserRouters } from "./modules/user/user.route";
+import express, { Request, Response } from "express";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import notFound from "./app/middlewares/notFound";
+import router from "./app/routes";
 
 const app = express();
 
@@ -8,10 +10,13 @@ app.use(express.json());
 app.use(cors());
 
 // user routers
-app.use("/api/users", UserRouters);
+app.use("/api/", router);
 
-app.get("/", (req, res) => {
-  res.send("University Management Service is Running!");
+app.get("/", (req: Request, res: Response) => {
+  res.send("University Management System is Running!");
 });
+
+app.use(globalErrorHandler);
+app.use(notFound);
 
 export default app;
