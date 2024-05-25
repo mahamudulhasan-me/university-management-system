@@ -111,44 +111,47 @@ const objectIdSchema = z.custom((value) => {
     throw new Error("User ID must be a valid MongoDB ObjectId");
   }
 });
-const ZodStudentValidationSchema = z.object({
-  id: z
-    .string({
-      required_error: "ID is required",
-      invalid_type_error: "ID must be a string",
-    })
-    .min(1, { message: "ID is required" }),
-  userId: objectIdSchema, // Assuming userId is a string. Adjust if necessary.
-  name: ZodNameValidationSchema,
-  gender: z.enum(["male", "female"], {
-    required_error: "Gender is required",
-    invalid_type_error: "Gender must be either 'male' or 'female'",
+export const ZCreateStudentValidationSchema = z.object({
+  body: z.object({
+    password: z
+      .string({
+        invalid_type_error: "Password must be a string",
+      })
+      .max(30, { message: "Password can not be more than 30 characters" })
+      .optional(),
+    student: z.object({
+      name: ZodNameValidationSchema,
+      gender: z.enum(["male", "female"], {
+        required_error: "Gender is required",
+        invalid_type_error: "Gender must be either 'male' or 'female'",
+      }),
+      dateOfBirth: z.coerce.date({
+        required_error: "Date of birth is required",
+        invalid_type_error: "Date of birth must be a valid date",
+      }),
+      email: z
+        .string({
+          required_error: "Email is required",
+          invalid_type_error: "Email must be a string",
+        })
+        .email({ message: "Invalid email address" }),
+      contactNumber: z
+        .string({
+          required_error: "Contact number is required",
+          invalid_type_error: "Contact number must be a string",
+        })
+        .min(1, { message: "Contact number is required" }),
+      permanentAddress: ZodAddressValidationSchema,
+      presentAddress: ZodAddressValidationSchema,
+      guardian: ZodGuardianValidationSchema,
+      localGuardian: ZodLocalGuardianValidationSchema,
+      profileImage: z
+        .string({
+          invalid_type_error: "Profile image must be a string",
+        })
+        .optional(),
+    }),
   }),
-  dateOfBirth: z.coerce.date({
-    required_error: "Date of birth is required",
-    invalid_type_error: "Date of birth must be a valid date",
-  }),
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email({ message: "Invalid email address" }),
-  contactNumber: z
-    .string({
-      required_error: "Contact number is required",
-      invalid_type_error: "Contact number must be a string",
-    })
-    .min(1, { message: "Contact number is required" }),
-  permanentAddress: ZodAddressValidationSchema,
-  presentAddress: ZodAddressValidationSchema,
-  guardian: ZodGuardianValidationSchema,
-  localGuardian: ZodLocalGuardianValidationSchema,
-  profileImage: z
-    .string({
-      invalid_type_error: "Profile image must be a string",
-    })
-    .optional(),
 });
 
-export default ZodStudentValidationSchema;
+export default ZCreateStudentValidationSchema;

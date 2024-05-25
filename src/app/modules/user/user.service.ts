@@ -1,7 +1,6 @@
 import config from "../../config";
 import { IStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
-import ZodStudentValidationSchema from "../student/student.validation";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -18,9 +17,7 @@ const createStudent = async (password: string, studentInfo: IStudent) => {
   if (Object.keys(createdUser).length) {
     studentInfo.id = createdUser.id;
     studentInfo.userId = createdUser._id;
-
-    const validStudentInfo = ZodStudentValidationSchema.parse(studentInfo);
-    const createdStudent = StudentModel.create(validStudentInfo);
+    const createdStudent = StudentModel.create(studentInfo);
     return createdStudent;
   }
 };
