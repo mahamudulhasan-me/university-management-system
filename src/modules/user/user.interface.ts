@@ -6,3 +6,9 @@ export interface IUser {
   status: "active" | "inactive";
   isDeleted: boolean;
 }
+
+// export interface INewUser {
+//   id: string;
+//   password: string;
+//   role: "admin" | "student" | "faculty";
+// }

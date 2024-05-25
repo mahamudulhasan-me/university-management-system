@@ -11,7 +11,7 @@ app.use(cors());
 app.use("/api/users", UserRouters);
 
 app.get("/", (req, res) => {
-  res.send("Express + TypeScript + Mongoose Server");
+  res.send("University Management Service is Running!");
 });
 
 export default app;
