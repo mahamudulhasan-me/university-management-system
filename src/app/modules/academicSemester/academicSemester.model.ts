@@ -1,45 +1,53 @@
 import { Schema, model } from "mongoose";
+import {
+  months,
+  semesterCode,
+  semesterName,
+} from "./academicSemester.constant";
 import { IAcademicSemester } from "./academicSemester.interface";
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-const academicSemesterSchema = new Schema<IAcademicSemester>({
-  name: {
-    type: String,
-    enum: ["Autumn", "Summer", "Fall"],
-    required: true,
+const academicSemesterSchema = new Schema<IAcademicSemester>(
+  {
+    name: {
+      type: String,
+      enum: semesterName,
+      required: true,
+    },
+    code: {
+      type: String,
+      enum: semesterCode,
+      required: true,
+    },
+    year: {
+      type: String,
+      required: true,
+    },
+    startMonth: {
+      type: String,
+      enum: months,
+      required: true,
+    },
+    endMonth: {
+      type: String,
+      enum: months,
+      required: true,
+    },
   },
-  code: {
-    type: String,
-    enum: ["01", "02", "03"],
-    required: true,
-  },
-  year: {
-    type: Date,
-    required: true,
-  },
-  startMonth: {
-    type: String,
-    enum: months,
-    required: true,
-  },
-  endMonth: {
-    type: String,
-    enum: months,
-    required: true,
-  },
+  {
+    timestamps: true,
+  }
+);
+
+academicSemesterSchema.pre("save", async function (next) {
+  const isSemesterExist = await AcademicSemesterModel.find({
+    name: this.name,
+    year: this.year,
+  });
+
+  if (isSemesterExist) {
+    throw new Error(`In The Year ${this.year}, ${this.name} Already Exist!`);
+  }
+  next();
 });
 
 export const AcademicSemesterModel = model<IAcademicSemester>(
