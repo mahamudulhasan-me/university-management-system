@@ -1,4 +1,5 @@
 import httpStatus from "http-status";
+import { Types } from "mongoose";
 import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { AcademicSemesterServices } from "./academicSemester.service";
@@ -15,7 +16,7 @@ const getAllAcademicSemester = asyncHandler(async (req, res, next) => {
 });
 
 const getAcademicSemester = asyncHandler(async (req, res, next) => {
-  const semesterId = req.params.semesterId as string;
+  const semesterId = new Types.ObjectId(req.params.semesterId);
 
   const result = await AcademicSemesterServices.getAcademicSemester(semesterId);
 

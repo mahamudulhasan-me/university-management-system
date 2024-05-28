@@ -1,8 +1,9 @@
+import { Types } from "mongoose";
 import { semesterNameAndCodeMapper } from "./academicSemester.constant";
 import { IAcademicSemester } from "./academicSemester.interface";
 import { AcademicSemesterModel } from "./academicSemester.model";
 
-const getAcademicSemester = async (semesterId: string) => {
+const getAcademicSemester = async (semesterId: Types.ObjectId) => {
   const semester = await AcademicSemesterModel.findById(semesterId);
   return semester;
 };
@@ -22,9 +23,13 @@ const createAcademicSemester = async (payload: IAcademicSemester) => {
 
 const updateAcademicSemester = async (
   semesterId: string,
-  payload: IAcademicSemester
+  payload: Partial<IAcademicSemester>
 ) => {
-  if (semesterNameAndCodeMapper[payload.name] !== payload.code) {
+  if (
+    payload.name &&
+    payload.code &&
+    semesterNameAndCodeMapper[payload.name] !== payload.code
+  ) {
     throw new Error("Semester Name and Code Invalid!");
   }
 

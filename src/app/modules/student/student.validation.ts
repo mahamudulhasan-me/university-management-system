@@ -145,6 +145,7 @@ export const ZCreateStudentValidationSchema = z.object({
       presentAddress: ZodAddressValidationSchema,
       guardian: ZodGuardianValidationSchema,
       localGuardian: ZodLocalGuardianValidationSchema,
+      admissionSemester: z.string(),
       profileImage: z
         .string({
           invalid_type_error: "Profile image must be a string",

@@ -54,6 +54,11 @@ export const studentSchema = new Schema<IStudent>({
   presentAddress: { type: addressSchema, required: true },
   guardian: { type: guardianSchema, required: true },
   localGuardian: { type: localGuardianSchema, required: true },
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "AcademicSemester",
+  },
   profileImage: { type: String },
 });
 

@@ -1,7 +1,10 @@
 import { Router } from "express";
 import validRequestHandler from "../../utils/validRequestHandler";
 import { AcademicSemesterControllers } from "./academicSemester.controller";
-import ZodCreateAcademicSemesterValidationSchema from "./academicSemester.validation";
+import {
+  ZodCreateAcademicSemesterValidationSchema,
+  ZodUpdateAcademicSemesterValidationSchema,
+} from "./academicSemester.validation";
 
 const {
   getAcademicSemester,
@@ -20,6 +23,10 @@ router.post(
   createAcademicSemester
 );
 
-router.patch("/:semesterId", updatedAcademicSemester);
+router.patch(
+  "/:semesterId",
+  validRequestHandler(ZodUpdateAcademicSemesterValidationSchema),
+  updatedAcademicSemester
+);
 
 export const AcademicSemesterRouters = router;
