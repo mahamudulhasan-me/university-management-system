@@ -1,4 +1,3 @@
-import { isValidObjectId } from "mongoose";
 import { z } from "zod";
 
 export const ZodNameValidationSchema = z.object({
@@ -104,13 +103,13 @@ const ZodLocalGuardianValidationSchema = z.object({
 });
 
 // Define a custom Zod type for MongoDB ObjectId
-const objectIdSchema = z.custom((value) => {
-  if (isValidObjectId(value)) {
-    return value;
-  } else {
-    throw new Error("User ID must be a valid MongoDB ObjectId");
-  }
-});
+// const objectIdSchema = z.custom((value) => {
+//   if (isValidObjectId(value)) {
+//     return value;
+//   } else {
+//     throw new Error("User ID must be a valid MongoDB ObjectId");
+//   }
+// });
 export const ZCreateStudentValidationSchema = z.object({
   body: z.object({
     password: z

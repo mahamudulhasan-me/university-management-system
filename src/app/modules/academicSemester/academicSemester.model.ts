@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import AppError from "../../errors/AppError";
 import {
   months,
   semesterCode,
@@ -45,7 +46,10 @@ academicSemesterSchema.pre("save", async function (next) {
   });
 
   if (isSemesterExist) {
-    throw new Error(`In The Year ${this.year}, ${this.name} Already Exist!`);
+    throw new AppError(
+      409,
+      `In The Year ${this.year}, ${this.name} Already Exist!`
+    );
   }
   next();
 });

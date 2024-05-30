@@ -38,6 +38,7 @@ export interface IStudent {
   presentAddress: IAddress;
   guardian: IGuardian;
   localGuardian: ILocalGuardian;
+  academicDepartment: Types.ObjectId;
   admissionSemester: Types.ObjectId;
   profileImage?: string;
 }

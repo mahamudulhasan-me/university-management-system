@@ -6,12 +6,12 @@ const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  let statusCode = 500;
-  let message = "Something went wrong!";
+  let statusCode = error.statusCode || 500;
+  let message = error.message || "Something went wrong!";
 
   return res.status(statusCode).json({
     success: false,
-    message: error.message || message,
+    message: message,
     error,
   });
 };
