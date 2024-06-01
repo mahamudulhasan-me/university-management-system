@@ -1,5 +1,6 @@
 import { Router } from "express";
-import validRequestHandler from "../../utils/validRequestHandler";
+
+import validRequestHandler from "../../middlewares/validRequestHandler";
 import { FacultyControllers } from "./faculty.controller";
 import { ZodFacultyValidationSchema } from "./faculty.validation";
 
