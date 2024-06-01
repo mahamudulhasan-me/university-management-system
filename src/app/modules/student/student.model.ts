@@ -5,8 +5,19 @@ import {
   ILocalGuardian,
   IName,
   IStudent,
+  TBloodGroup,
 } from "./student.interface";
 
+export const BloodGroup: TBloodGroup[] = [
+  "A+",
+  "A-",
+  "B+",
+  "B-",
+  "AB+",
+  "AB-",
+  "O+",
+  "O-",
+];
 export const nameSchema = new Schema<IName>({
   firstName: { type: String, required: true },
   middleName: { type: String },
@@ -47,6 +58,7 @@ export const studentSchema = new Schema<IStudent>({
   },
   name: { type: nameSchema, required: true },
   gender: { type: String, enum: ["male", "female"], required: true },
+  bloodGroup: { type: String, enum: BloodGroup },
   dateOfBirth: { type: Date, required: true },
   email: { type: String, required: true, unique: true },
   contactNumber: { type: String, required: true },
@@ -65,6 +77,24 @@ export const studentSchema = new Schema<IStudent>({
     ref: "AcademicSemester",
   },
   profileImage: { type: String },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
+studentSchema.pre("find", async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre("findOne", async function (next) {
+  this.findOne({ isDeleted: { $ne: true } });
+  next();
+});
+
+studentSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+  next();
+});
 export const StudentModel = model<IStudent>("Student", studentSchema);

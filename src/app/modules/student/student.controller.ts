@@ -23,7 +23,35 @@ const getStudentById = asyncHandler(async (req, res, next) => {
   });
 });
 
+const deleteStudentById = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const deletedStudent = await StudentServices.deleteStudentById(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Student deleted successfully!",
+    data: deletedStudent,
+  });
+});
+
+const updateStudent = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { student } = req.body;
+
+  const updatedStudent = await StudentServices.updateStudent(id, student);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Student updated successfully!",
+    data: updatedStudent,
+  });
+});
+
 export const StudentControllers = {
   getAllStudents,
-  getStudentById
+  getStudentById,
+  deleteStudentById,
+  updateStudent,
 };

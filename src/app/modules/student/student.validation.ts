@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { BloodGroup } from "./student.model";
 
-export const ZodNameValidationSchema = z.object({
+export const ZodCreateNameValidationSchema = z.object({
   firstName: z
     .string({
       required_error: "First name is required",
@@ -20,7 +21,7 @@ export const ZodNameValidationSchema = z.object({
     .min(1, { message: "Last name is required" }),
 });
 
-export const ZodAddressValidationSchema = z.object({
+export const ZodCreateAddressValidationSchema = z.object({
   address: z
     .string({
       required_error: "Address is required",
@@ -52,8 +53,8 @@ export const ZodAddressValidationSchema = z.object({
     .optional(),
 });
 
-const ZodGuardianValidationSchema = z.object({
-  fatherName: ZodNameValidationSchema,
+const ZodCreateGuardianValidationSchema = z.object({
+  fatherName: ZodCreateNameValidationSchema,
   fatherOccupation: z
     .string({
       required_error: "Father's occupation is required",
@@ -66,7 +67,7 @@ const ZodGuardianValidationSchema = z.object({
       invalid_type_error: "Father's contact number must be a string",
     })
     .min(1, { message: "Father's contact number is required" }),
-  motherName: ZodNameValidationSchema.optional(),
+  motherName: ZodCreateNameValidationSchema.optional(),
   motherOccupation: z
     .string({
       required_error: "Mother's occupation is required",
@@ -81,8 +82,8 @@ const ZodGuardianValidationSchema = z.object({
     .min(1, { message: "Mother's contact number is required" }),
 });
 
-const ZodLocalGuardianValidationSchema = z.object({
-  name: ZodNameValidationSchema,
+const ZodCreateLocalGuardianValidationSchema = z.object({
+  name: ZodCreateNameValidationSchema,
   occupation: z
     .string({
       required_error: "Occupation is required",
@@ -102,15 +103,7 @@ const ZodLocalGuardianValidationSchema = z.object({
     .optional(),
 });
 
-// Define a custom Zod type for MongoDB ObjectId
-// const objectIdSchema = z.custom((value) => {
-//   if (isValidObjectId(value)) {
-//     return value;
-//   } else {
-//     throw new Error("User ID must be a valid MongoDB ObjectId");
-//   }
-// });
-export const ZCreateStudentValidationSchema = z.object({
+export const ZodCreateStudentValidationSchema = z.object({
   body: z.object({
     password: z
       .string({
@@ -119,11 +112,12 @@ export const ZCreateStudentValidationSchema = z.object({
       .max(30, { message: "Password can not be more than 30 characters" })
       .optional(),
     student: z.object({
-      name: ZodNameValidationSchema,
+      name: ZodCreateNameValidationSchema,
       gender: z.enum(["male", "female"], {
         required_error: "Gender is required",
         invalid_type_error: "Gender must be either 'male' or 'female'",
       }),
+      bloodGroup: z.enum([...BloodGroup] as [string, ...string[]]).optional(),
       dateOfBirth: z.coerce.date({
         required_error: "Date of birth is required",
         invalid_type_error: "Date of birth must be a valid date",
@@ -140,10 +134,10 @@ export const ZCreateStudentValidationSchema = z.object({
           invalid_type_error: "Contact number must be a string",
         })
         .min(1, { message: "Contact number is required" }),
-      permanentAddress: ZodAddressValidationSchema,
-      presentAddress: ZodAddressValidationSchema,
-      guardian: ZodGuardianValidationSchema,
-      localGuardian: ZodLocalGuardianValidationSchema,
+      permanentAddress: ZodCreateAddressValidationSchema,
+      presentAddress: ZodCreateAddressValidationSchema,
+      guardian: ZodCreateGuardianValidationSchema,
+      localGuardian: ZodCreateLocalGuardianValidationSchema,
       admissionSemester: z.string(),
       profileImage: z
         .string({
@@ -154,4 +148,60 @@ export const ZCreateStudentValidationSchema = z.object({
   }),
 });
 
-export default ZCreateStudentValidationSchema;
+// Make all fields in student optional for update
+export const ZodUpdateStudentValidationSchema = z.object({
+  body: z
+    .object({
+      password: z
+        .string({
+          invalid_type_error: "Password must be a string",
+        })
+        .max(30, { message: "Password can not be more than 30 characters" })
+        .optional(),
+      student: z
+        .object({
+          name: ZodCreateNameValidationSchema.partial(),
+          gender: z
+            .enum(["male", "female"], {
+              required_error: "Gender is required",
+              invalid_type_error: "Gender must be either 'male' or 'female'",
+            })
+            .optional(),
+          bloodGroup: z
+            .enum([...BloodGroup] as [string, ...string[]])
+            .optional(),
+          dateOfBirth: z.coerce
+            .date({
+              required_error: "Date of birth is required",
+              invalid_type_error: "Date of birth must be a valid date",
+            })
+            .optional(),
+          email: z
+            .string({
+              required_error: "Email is required",
+              invalid_type_error: "Email must be a string",
+            })
+            .email({ message: "Invalid email address" })
+            .optional(),
+          contactNumber: z
+            .string({
+              required_error: "Contact number is required",
+              invalid_type_error: "Contact number must be a string",
+            })
+            .min(1, { message: "Contact number is required" })
+            .optional(),
+          permanentAddress: ZodCreateAddressValidationSchema.partial(),
+          presentAddress: ZodCreateAddressValidationSchema.partial(),
+          guardian: ZodCreateGuardianValidationSchema.partial(),
+          localGuardian: ZodCreateLocalGuardianValidationSchema.partial(),
+          admissionSemester: z.string().optional(),
+          profileImage: z
+            .string({
+              invalid_type_error: "Profile image must be a string",
+            })
+            .optional(),
+        })
+        .partial(),
+    })
+    .partial(),
+});

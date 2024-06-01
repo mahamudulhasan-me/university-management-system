@@ -1,4 +1,13 @@
 import { Types } from "mongoose";
+export type TBloodGroup =
+  | "A+"
+  | "A-"
+  | "B+"
+  | "B-"
+  | "AB+"
+  | "AB-"
+  | "O+"
+  | "O-";
 
 export interface IName {
   firstName: string;
@@ -31,6 +40,7 @@ export interface IStudent {
   userId: Types.ObjectId;
   name: IName;
   gender: "male" | "female";
+  bloodGroup: TBloodGroup;
   dateOfBirth: Date;
   email: string;
   contactNumber: string;
@@ -41,4 +51,5 @@ export interface IStudent {
   academicDepartment: Types.ObjectId;
   admissionSemester: Types.ObjectId;
   profileImage?: string;
+  isDeleted: boolean;
 }
