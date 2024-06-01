@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import validRequestHandler from "../../middlewares/validRequestHandler";
-
 import { ZodCreateStudentValidationSchema } from "../student/student.validation";
 import { UserControllers } from "./user.controller";
 

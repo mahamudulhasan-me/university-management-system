@@ -1,29 +1,50 @@
 import { ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
 import config from "../config";
+import castErrorHandler from "../errors/castErrorHandler";
+import duplicateKeyErrorHandler from "../errors/duplicateKeyErrorHandler";
+import mongooseValidationError from "../errors/mongooseValidationErrorHandler";
 import zodErrorHandler from "../errors/zodErrorHandler";
-import { TErrorSource } from "../interfaces/error";
+import { TErrorSources } from "../interfaces/error";
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // error pattern
   let statusCode = error.statusCode || 500;
   let message = error.message || "Something went wrong!";
-  let errorSource: TErrorSource = [
+  let errorSources: TErrorSources = [
     { path: "", message: "Something went wrong!" },
   ];
 
   if (error instanceof ZodError) {
-    const { ZErrorSource, ZMessage, ZStatusCode } = zodErrorHandler(error);
+    const errRes = zodErrorHandler(error);
 
-    statusCode = ZStatusCode;
-    message = ZMessage;
-    errorSource = ZErrorSource;
+    statusCode = errRes.statusCode;
+    message = errRes.message;
+    errorSources = errRes.errorSources;
+  } else if (error?.name === "ValidationError") {
+    const errRes = mongooseValidationError(error);
+
+    statusCode = errRes.statusCode;
+    message = errRes.message;
+    errorSources = errRes.errorSources;
+  } else if (error?.name === "CastError") {
+    const errRes = castErrorHandler(error);
+
+    statusCode = errRes.statusCode;
+    message = errRes.message;
+    errorSources = errRes.errorSources;
+  } else if (error?.code === 11000) {
+    const errRes = duplicateKeyErrorHandler(error);
+
+    statusCode = errRes.statusCode;
+    message = errRes.message;
+    errorSources = errRes.errorSources;
   }
-
   return res.status(statusCode).json({
     success: false,
     message: message,
-    errorSource,
+    errorSources,
+    // error,
     stack: config.node_env === "development" ? error?.stack : null,
   });
 };
