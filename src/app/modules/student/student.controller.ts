@@ -1,9 +1,10 @@
+import { RequestHandler } from "express";
 import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { StudentServices } from "./student.service";
 
-const getAllStudents = asyncHandler(async (req, res, next) => {
-  const students = await StudentServices.getAllStudents();
+const getAllStudents: RequestHandler = asyncHandler(async (req, res, next) => {
+  const students = await StudentServices.getAllStudents(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
