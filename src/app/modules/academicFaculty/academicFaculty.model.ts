@@ -23,4 +23,4 @@ facultySchema.pre("save", async function (next) {
   next();
 });
 
-export const FacultyModel = model<IFaculty>("Faculty", facultySchema);
+export const FacultyModel = model<IFaculty>("AcademicFaculty", facultySchema);

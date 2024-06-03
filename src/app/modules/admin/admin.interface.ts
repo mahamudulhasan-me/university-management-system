@@ -15,4 +15,5 @@ export interface IAdmin {
   presentAddress: IAddress;
   profileImage: string;
   managementDepartment: Types.ObjectId;
+  isDeleted: boolean;
 }
