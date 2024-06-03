@@ -1,6 +1,6 @@
 import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
-import { FacultyServices } from "./faculty.service";
+import { FacultyServices } from "./academicFaculty.service";
 
 const createFaculty = asyncHandler(async (req, res, nex) => {
   const createdFaculty = await FacultyServices.createFaculty(req.body);

@@ -1,7 +1,7 @@
 import { Router } from "express";
+import { FacultyRouters } from "../modules/academicFaculty/faculty.route";
 import { AcademicSemesterRouters } from "../modules/academicSemester/academicSemester.route";
 import { DepartmentRouters } from "../modules/department/department.route";
-import { FacultyRouters } from "../modules/faculty/faculty.route";
 import { StudentRouters } from "../modules/student/student.route";
 import { UserRouters } from "../modules/user/user.route";
 

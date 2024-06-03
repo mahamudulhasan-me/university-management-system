@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import validRequestHandler from "../../middlewares/validRequestHandler";
-import { FacultyControllers } from "./faculty.controller";
-import { ZodFacultyValidationSchema } from "./faculty.validation";
+import { FacultyControllers } from "./academicFaculty.controller";
+import { ZodFacultyValidationSchema } from "./academicFaculty.validation";
 
 const router = Router();
 

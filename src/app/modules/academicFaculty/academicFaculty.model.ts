@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import AppError from "../../errors/AppError";
-import { IFaculty } from "./faculty.interface";
+import { IFaculty } from "./academicFaculty.interface";
 
 export const facultySchema = new Schema<IFaculty>(
   {

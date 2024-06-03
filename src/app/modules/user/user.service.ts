@@ -48,13 +48,13 @@ const createStudent = async (password: string, studentInfo: IStudent) => {
       throw new AppError(400, "Failed to created student");
     }
     await session.commitTransaction();
-    await session.endSession();
 
     return createdStudent;
   } catch (error) {
     await session.abortTransaction();
-    await session.endSession();
     throw error;
+  } finally {
+    await session.endSession();
   }
 };
 
