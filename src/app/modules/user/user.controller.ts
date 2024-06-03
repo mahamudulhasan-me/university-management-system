@@ -17,6 +17,7 @@ const createStudent = asyncHandler(async (req, res, next) => {
 const createAdmin = asyncHandler(async (req, res, next) => {
   const { password, admin } = req.body;
   const createdAdmin = await UserServices.createAdmin(password, admin);
+
   sendResponse(res, {
     statusCode: 201,
     success: true,

@@ -1,4 +1,4 @@
-import { startSession } from "mongoose";
+import { ClientSession, startSession } from "mongoose";
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { AcademicSemesterModel } from "../academicSemester/academicSemester.model";
@@ -9,7 +9,7 @@ import { IStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
-import { generateStudentId } from "./user.utils";
+import { generateAdminId, generateStudentId } from "./user.utils";
 
 const createStudent = async (password: string, studentInfo: IStudent) => {
   const userInfo: Partial<IUser> = {};
@@ -61,22 +61,23 @@ const createStudent = async (password: string, studentInfo: IStudent) => {
 const createAdmin = async (password: string, payload: IAdmin) => {
   const userInfo: Partial<IUser> = {};
 
-  const session = await startSession();
+  const session: ClientSession = await startSession();
 
   try {
     session.startTransaction();
 
     userInfo.password = password || config.default_password;
     userInfo.role = "admin";
-    userInfo.id = "A-0001";
+    userInfo.id = await generateAdminId();
 
-    const createdUser = await UserModel.create([userInfo], { session });
+    const createdUsers = await UserModel.create([userInfo], { session });
 
-    if (!createdUser.length) {
+    if (!createdUsers.length) {
       throw new AppError(400, "Failed to create user!");
     }
-    payload.id = createdUser[0].id;
-    payload.userId = createdUser[0]._id;
+    const createdUser = createdUsers[0];
+    payload.id = createdUser.id;
+    payload.userId = createdUser._id;
 
     const createdAdmin = await AdminModel.create([payload], { session });
 
@@ -85,11 +86,12 @@ const createAdmin = async (password: string, payload: IAdmin) => {
     }
 
     await session.commitTransaction();
-    await session.endSession();
+    return createdAdmin;
   } catch (error) {
     await session.abortTransaction();
-    await session.endSession();
     throw error;
+  } finally {
+    await session.endSession();
   }
 };
 

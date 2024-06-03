@@ -31,3 +31,27 @@ export const generateStudentId = async (payload: IAcademicSemester) => {
   const studentId = `${payload.year}${payload.code}-${increaseId}`;
   return studentId;
 };
+
+const findLastAdminId = async () => {
+  const lastAdminId = await UserModel.findOne(
+    { role: "admin" },
+    { id: 1, _id: 1 }
+  )
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return lastAdminId?.id ? lastAdminId.id : undefined;
+};
+
+export const generateAdminId = async () => {
+  const lastId = (await findLastAdminId()) || "A-0001";
+
+  const prefix = lastId.slice(0, 2);
+  const numericPart = lastId.slice(2);
+
+  const newNumericPart = (parseInt(numericPart, 10) + 1)
+    .toString()
+    .padStart(4, "0");
+
+  return `${prefix}${newNumericPart}`;
+};
