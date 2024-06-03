@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import AppError from "../../errors/AppError";
-import { FacultyModel } from "../academicFaculty/academicFaculty.model";
+import { AcademicFacultyModel } from "../academicFaculty/academicFaculty.model";
 import { IDepartment } from "./department.interface";
 
 const departmentSchema = new Schema<IDepartment>(
@@ -31,7 +31,7 @@ departmentSchema.pre("save", async function (next) {
 
 departmentSchema.pre("findOneAndUpdate", async function (next) {
   const requestedDep = this.getQuery();
-  const isDepExit = await FacultyModel.findOne(requestedDep);
+  const isDepExit = await AcademicFacultyModel.findOne(requestedDep);
   if (!isDepExit) throw new AppError(404, "This faculty not exit!");
   next();
 });

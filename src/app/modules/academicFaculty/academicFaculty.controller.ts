@@ -1,56 +1,58 @@
 import asyncHandler from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
-import { FacultyServices } from "./academicFaculty.service";
+import { AcademicFacultyServices } from "./academicFaculty.service";
 
-const createFaculty = asyncHandler(async (req, res, nex) => {
-  const createdFaculty = await FacultyServices.createFaculty(req.body);
+const createAcademicFaculty = asyncHandler(async (req, res, nex) => {
+  const createdAcademicFaculty =
+    await AcademicFacultyServices.createAcademicFaculty(req.body);
   sendResponse(res, {
     statusCode: 201,
     success: true,
     message: "Academic Faculty Created Successfully!",
-    data: createdFaculty,
+    data: createdAcademicFaculty,
   });
 });
 
-const getFacultyById = asyncHandler(async (req, res, next) => {
+const getAcademicFacultyById = asyncHandler(async (req, res, next) => {
   const { facultyId } = req.params;
-  const faculty = await FacultyServices.getFacultyById(facultyId);
+  const academicFaculty = await AcademicFacultyServices.getAcademicFacultyById(
+    facultyId
+  );
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Academic faculty fetched successfully!",
-    data: faculty,
+    data: academicFaculty,
   });
 });
 
-const getAllFaculty = asyncHandler(async (req, res, next) => {
-  const faculties = await FacultyServices.getAllFaculty();
+const getAllAcademicFaculty = asyncHandler(async (req, res, next) => {
+  const academicFaculties =
+    await AcademicFacultyServices.getAllAcademicFaculty();
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Academic faculties fetched successfully!",
-    data: faculties,
+    data: academicFaculties,
   });
 });
 
-const updateFaculty = asyncHandler(async (req, res, next) => {
+const updateAcademicFaculty = asyncHandler(async (req, res, next) => {
   const { facultyId } = req.params;
-  const updatedFaculty = await FacultyServices.updateFaculty(
-    facultyId,
-    req.body
-  );
+  const updatedAcademicFaculty =
+    await AcademicFacultyServices.updateAcademicFaculty(facultyId, req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Academic faculty updated successfully!",
-    data: updatedFaculty,
+    data: updatedAcademicFaculty,
   });
 });
 
-export const FacultyControllers = {
-  createFaculty,
-  getFacultyById,
-  getAllFaculty,
-  updateFaculty,
+export const AcademicFacultyControllers = {
+  createAcademicFaculty,
+  getAcademicFacultyById,
+  getAllAcademicFaculty,
+  updateAcademicFaculty,
 };

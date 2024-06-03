@@ -1,3 +1,3 @@
-export interface IFaculty {
+export interface IAcademicFaculty {
   name: string;
 }

@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
 import AppError from "../../errors/AppError";
-import { IFaculty } from "./academicFaculty.interface";
+import { IAcademicFaculty } from "./academicFaculty.interface";
 
-export const facultySchema = new Schema<IFaculty>(
+export const academicFacultySchema = new Schema<IAcademicFaculty>(
   {
     name: {
       type: String,
@@ -15,12 +15,15 @@ export const facultySchema = new Schema<IFaculty>(
   }
 );
 
-facultySchema.pre("save", async function (next) {
-  const isFacultyExit = await FacultyModel.findOne({ name: this.name });
+academicFacultySchema.pre("save", async function (next) {
+  const isFacultyExit = await AcademicFacultyModel.findOne({ name: this.name });
 
   if (isFacultyExit) throw new AppError(409, "This faculty already exit!");
 
   next();
 });
 
-export const FacultyModel = model<IFaculty>("AcademicFaculty", facultySchema);
+export const AcademicFacultyModel = model<IAcademicFaculty>(
+  "AcademicFaculty",
+  academicFacultySchema
+);

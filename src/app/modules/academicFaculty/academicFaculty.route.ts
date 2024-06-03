@@ -1,23 +1,23 @@
 import { Router } from "express";
 
 import validRequestHandler from "../../middlewares/validRequestHandler";
-import { FacultyControllers } from "./academicFaculty.controller";
-import { ZodFacultyValidationSchema } from "./academicFaculty.validation";
+import { AcademicFacultyControllers } from "./academicFaculty.controller";
+import { ZodAcademicFacultyValidationSchema } from "./academicFaculty.validation";
 
 const router = Router();
 
-router.get("/", FacultyControllers.getAllFaculty);
-router.get("/:facultyId", FacultyControllers.getFacultyById);
+router.get("/", AcademicFacultyControllers.getAllAcademicFaculty);
+router.get("/:facultyId", AcademicFacultyControllers.getAcademicFacultyById);
 router.post(
   "/create-faculty",
-  validRequestHandler(ZodFacultyValidationSchema),
-  FacultyControllers.createFaculty
+  validRequestHandler(ZodAcademicFacultyValidationSchema),
+  AcademicFacultyControllers.createAcademicFaculty
 );
 
 router.patch(
   "/:facultyId",
-  validRequestHandler(ZodFacultyValidationSchema),
-  FacultyControllers.updateFaculty
+  validRequestHandler(ZodAcademicFacultyValidationSchema),
+  AcademicFacultyControllers.updateAcademicFaculty
 );
 
-export const FacultyRouters = router;
+export const AcademicFacultyControllersFacultyRouters = router;

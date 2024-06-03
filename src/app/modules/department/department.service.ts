@@ -1,10 +1,12 @@
 import AppError from "../../errors/AppError";
-import { FacultyModel } from "../academicFaculty/academicFaculty.model";
+import { AcademicFacultyModel } from "../academicFaculty/academicFaculty.model";
 import { IDepartment } from "./department.interface";
 import { DepartmentModel } from "./department.model";
 
 const createDepartment = async (payload: IDepartment) => {
-  const isFacultyExit = await FacultyModel.findById(payload.academicFaculty);
+  const isFacultyExit = await AcademicFacultyModel.findById(
+    payload.academicFaculty
+  );
   if (!isFacultyExit) throw new AppError(404, "This Faculty not exit");
 
   const createdDepartment = await DepartmentModel.create(payload);

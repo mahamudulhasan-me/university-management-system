@@ -1,23 +1,26 @@
-import { IFaculty } from "./academicFaculty.interface";
-import { FacultyModel } from "./academicFaculty.model";
+import { IAcademicFaculty } from "./academicFaculty.interface";
+import { AcademicFacultyModel } from "./academicFaculty.model";
 
-const createFaculty = async (payload: IFaculty) => {
-  const createdFaculty = await FacultyModel.create(payload);
+const createAcademicFaculty = async (payload: IAcademicFaculty) => {
+  const createdFaculty = await AcademicFacultyModel.create(payload);
   return createdFaculty;
 };
 
-const getFacultyById = async (facultyId: string) => {
-  const faculty = await FacultyModel.findById(facultyId);
+const getAcademicFacultyById = async (facultyId: string) => {
+  const faculty = await AcademicFacultyModel.findById(facultyId);
   return faculty;
 };
 
-const getAllFaculty = async () => {
-  const faculties = await FacultyModel.find();
+const getAllAcademicFaculty = async () => {
+  const faculties = await AcademicFacultyModel.find();
   return faculties;
 };
 
-const updateFaculty = async (facultyId: string, payload: IFaculty) => {
-  const updatedFaculty = await FacultyModel.findByIdAndUpdate(
+const updateAcademicFaculty = async (
+  facultyId: string,
+  payload: IAcademicFaculty
+) => {
+  const updatedFaculty = await AcademicFacultyModel.findByIdAndUpdate(
     facultyId,
     payload,
     { new: true }
@@ -25,9 +28,9 @@ const updateFaculty = async (facultyId: string, payload: IFaculty) => {
   return updatedFaculty;
 };
 
-export const FacultyServices = {
-  createFaculty,
-  getFacultyById,
-  getAllFaculty,
-  updateFaculty,
+export const AcademicFacultyServices = {
+  createAcademicFaculty,
+  getAllAcademicFaculty,
+  getAcademicFacultyById,
+  updateAcademicFaculty,
 };
