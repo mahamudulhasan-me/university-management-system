@@ -2,6 +2,8 @@ import { startSession } from "mongoose";
 import config from "../../config";
 import AppError from "../../errors/AppError";
 import { AcademicSemesterModel } from "../academicSemester/academicSemester.model";
+import { IAdmin } from "../admin/admin.interface";
+import { AdminModel } from "../admin/admin.model";
 import { DepartmentModel } from "../department/department.model";
 import { IStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
@@ -11,9 +13,7 @@ import { generateStudentId } from "./user.utils";
 
 const createStudent = async (password: string, studentInfo: IStudent) => {
   const userInfo: Partial<IUser> = {};
-
   const session = await startSession();
-
   try {
     session.startTransaction();
     const admissionSemester = await AcademicSemesterModel.findById(
@@ -58,4 +58,39 @@ const createStudent = async (password: string, studentInfo: IStudent) => {
   }
 };
 
-export const UserServices = { createStudent };
+const createAdmin = async (password: string, payload: IAdmin) => {
+  const userInfo: Partial<IUser> = {};
+
+  const session = await startSession();
+
+  try {
+    session.startTransaction();
+
+    userInfo.password = password || config.default_password;
+    userInfo.role = "admin";
+    userInfo.id = "A-0001";
+
+    const createdUser = await UserModel.create([userInfo], { session });
+
+    if (!createdUser.length) {
+      throw new AppError(400, "Failed to create user!");
+    }
+    payload.id = createdUser[0].id;
+    payload.userId = createdUser[0]._id;
+
+    const createdAdmin = await AdminModel.create([payload], { session });
+
+    if (!createdAdmin.length) {
+      throw new AppError(400, "Failed to create admin");
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+};
+
+export const UserServices = { createStudent, createAdmin };

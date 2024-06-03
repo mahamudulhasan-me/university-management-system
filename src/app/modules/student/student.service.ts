@@ -39,12 +39,12 @@ import { StudentModel } from "./student.model";
 
 //   const filterQuery = searchQuery
 //     .find(queryObj)
-//     .populate("userId")
-//     .populate("admissionSemester")
-//     .populate({
-//       path: "academicDepartment",
-//       populate: { path: "academicFaculty" },
-//     });
+// .populate("userId")
+// .populate("admissionSemester")
+// .populate({
+//   path: "academicDepartment",
+//   populate: { path: "academicFaculty" },
+// });
 
 //   const sort = query.sort ? (query.sort as string) : "-createdAt";
 
@@ -77,7 +77,16 @@ const getAllStudents = async (
     "presentAddress.address",
   ];
 
-  const studentQuery = new QueryBuilder(StudentModel.find(), query)
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate("userId")
+      .populate("admissionSemester")
+      .populate({
+        path: "academicDepartment",
+        populate: { path: "academicFaculty" },
+      }),
+    query
+  )
     .search(studentSearchableFields)
     .filter()
     .sort()
