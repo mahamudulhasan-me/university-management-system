@@ -1,15 +1,22 @@
 import { ClientSession, startSession } from "mongoose";
 import config from "../../config";
 import AppError from "../../errors/AppError";
+import { AcademicFacultyModel } from "../academicFaculty/academicFaculty.model";
 import { AcademicSemesterModel } from "../academicSemester/academicSemester.model";
 import { IAdmin } from "../admin/admin.interface";
 import { AdminModel } from "../admin/admin.model";
 import { DepartmentModel } from "../department/department.model";
+import { IFaculty } from "../faculty/faculty.interface";
+import { FacultyModel } from "../faculty/faculty.model";
 import { IStudent } from "../student/student.interface";
 import { StudentModel } from "../student/student.model";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
-import { generateAdminId, generateStudentId } from "./user.utils";
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from "./user.utils";
 
 const createStudent = async (password: string, studentInfo: IStudent) => {
   const userInfo: Partial<IUser> = {};
@@ -95,4 +102,51 @@ const createAdmin = async (password: string, payload: IAdmin) => {
   }
 };
 
-export const UserServices = { createStudent, createAdmin };
+const createFaculty = async (password: string, payload: IFaculty) => {
+  const userInfo: Partial<IUser> = {};
+  const session = await startSession();
+  try {
+    session.startTransaction();
+
+    const existingAcademicFaculty = await AcademicFacultyModel.findById(
+      payload.academicFaculty
+    );
+    const existingAcademicDepartment = await DepartmentModel.findById(
+      payload.academicDepartment
+    );
+
+    if (!existingAcademicFaculty) {
+      throw new AppError(404, "Academic faculty not found");
+    }
+    if (!existingAcademicDepartment) {
+      throw new AppError(404, "Academic department not found");
+    }
+
+    userInfo.id = await generateFacultyId();
+    userInfo.password = password || config.default_password;
+    userInfo.role = "faculty";
+
+    const createdUser = await UserModel.create([userInfo], { session });
+
+    if (!createdUser) throw new AppError(400, "Failed to create user!");
+
+    payload.id = createdUser[0].id;
+    payload.userId = createdUser[0]._id;
+
+    const createdFaculty = await FacultyModel.create([payload], { session });
+
+    if (!createdFaculty) {
+      throw new AppError(400, "Failed to create faculty!");
+    }
+
+    await session.commitTransaction();
+    return createdFaculty;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    await session.endSession();
+  }
+};
+
+export const UserServices = { createStudent, createAdmin, createFaculty };

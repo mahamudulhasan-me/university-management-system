@@ -26,7 +26,20 @@ const createAdmin = asyncHandler(async (req, res, next) => {
   });
 });
 
+const createFaculty = asyncHandler(async (req, res, next) => {
+  const { password, faculty } = req.body;
+  const createdAdmin = await UserServices.createFaculty(password, faculty);
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Faculty Created Successfully!",
+    data: createdAdmin,
+  });
+});
+
 export const UserControllers = {
   createStudent,
   createAdmin,
+  createFaculty,
 };
