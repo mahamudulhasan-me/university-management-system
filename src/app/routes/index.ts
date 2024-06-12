@@ -5,6 +5,7 @@ import { AdminRouters } from "../modules/admin/admin.route";
 import { DepartmentRouters } from "../modules/department/department.route";
 import { StudentRouters } from "../modules/student/student.route";
 import { UserRouters } from "../modules/user/user.route";
+import { AuthRouters } from "../modules/auth/auth.route";
 
 const router = Router();
 
@@ -32,6 +33,10 @@ const moduleRouters = [
   {
     path: "/admins",
     route: AdminRouters,
+  },
+  {
+    path: "/auth",
+    route: AuthRouters,
   },
 ];
 

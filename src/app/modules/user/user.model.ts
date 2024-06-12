@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Schema, model } from "mongoose";
 import config from "../../config";
-import { IUser } from "./user.interface";
+import { IUser, IUserModel } from "./user.interface";
 
 const userSchema = new Schema<IUser>(
   {
@@ -55,4 +55,17 @@ userSchema.post("save", async function (userInfo, next) {
   next();
 });
 
-export const UserModel = model<IUser>("User", userSchema);
+userSchema.statics.isUserExist = async function (id: string) {
+  const user = await this.findOne({ id, isDeleted: false });
+  return user;
+};
+
+userSchema.statics.isPasswordMatch = async function (
+  plainPass: string,
+  hashedPass: string
+) {
+  const isMatch = await bcrypt.compare(plainPass, hashedPass);
+  return isMatch;
+};
+
+export const UserModel = model<IUser, IUserModel>("User", userSchema);
