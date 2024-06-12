@@ -12,6 +12,8 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 });
 
+const changePassword = asyncHandler(async (req, res) => {});
+
 export const AuthControllers = {
   loginUser,
 };

@@ -28,6 +28,7 @@ const getAcademicFacultyById = asyncHandler(async (req, res, next) => {
 });
 
 const getAllAcademicFaculty = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
   const academicFaculties =
     await AcademicFacultyServices.getAllAcademicFaculty();
   sendResponse(res, {

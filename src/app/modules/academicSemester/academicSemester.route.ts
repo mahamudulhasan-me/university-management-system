@@ -1,6 +1,8 @@
 import { Router } from "express";
 
+import auth from "../../middlewares/auth";
 import validRequestHandler from "../../middlewares/validRequestHandler";
+import { USER_ROLE } from "../user/user.constant";
 import { AcademicSemesterControllers } from "./academicSemester.controller";
 import {
   ZodCreateAcademicSemesterValidationSchema,
@@ -16,7 +18,7 @@ const {
 
 const router = Router();
 
-router.get("/", getAllAcademicSemester);
+router.get("/", auth(USER_ROLE.admin), getAllAcademicSemester);
 router.get("/:semesterId", getAcademicSemester);
 router.post(
   "/",

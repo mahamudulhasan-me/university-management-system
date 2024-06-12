@@ -13,6 +13,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      select: 0, // hide password from response
     },
     needsPasswordReset: {
       type: Boolean,
@@ -56,7 +57,9 @@ userSchema.post("save", async function (userInfo, next) {
 });
 
 userSchema.statics.isUserExist = async function (id: string) {
-  const user = await this.findOne({ id, isDeleted: false });
+  const user = await UserModel.findOne({ id, isDeleted: false }).select(
+    "+password"
+  );
   return user;
 };
 
