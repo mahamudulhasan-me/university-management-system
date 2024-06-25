@@ -7,6 +7,7 @@ export interface IUser {
   role: "admin" | "student" | "faculty";
   status: "active" | "inactive";
   isDeleted: boolean;
+  passwordChangeAt?: Date;
 }
 
 // export interface INewUser {
